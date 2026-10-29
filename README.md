@@ -6,9 +6,9 @@ Needle (Necessary Elements of Deep Learning) is a simple machine learning framew
 ---
 ### Team
 
-**Yujue Wang**
-**Yi (Shirley) Xu**
-**Elias Zheng**
+- **Yujue Wang**
+- **Yi (Shirley) Xu**
+- **Elias Zheng**
 
 ---
 
