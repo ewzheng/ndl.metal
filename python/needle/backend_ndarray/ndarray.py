@@ -216,6 +216,13 @@ class NDArray:
         else:
             return NDArray(self.numpy(), device=device)
 
+    def __array__(self, dtype=None, copy=None) -> np.ndarray:
+        """Let numpy functions (e.g. np.testing.assert_allclose) accept an NDArray"""
+        if copy is False:
+            raise ValueError("NDArray can't be viewed by numpy without copying")
+        arr = self.numpy()
+        return arr if dtype is None else arr.astype(dtype)
+
     def numpy(self) -> np.ndarray:
         """convert to a numpy array"""
         return self.device.to_numpy(
