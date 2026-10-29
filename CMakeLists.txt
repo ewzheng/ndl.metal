@@ -86,3 +86,36 @@ if(CUDA_FOUND)
 
 endif()
 
+
+#####################
+### METAL BACKEND ###
+#####################
+find_library(METAL_LIBRARY Metal)
+find_library(FOUNDATION_LIBRARY Foundation)
+if(APPLE AND METAL_LIBRARY AND FOUNDATION_LIBRARY)
+  message(STATUS "Found metal, building metal backend")
+
+  list(APPEND LINKER_LIBS ${METAL_LIBRARY} ${FOUNDATION_LIBRARY})
+
+  # clang compiles the .mm as Objective-C++, with the same CMAKE_CXX_FLAGS as the cpu backend
+  add_library(ndarray_backend_metal MODULE src/ndarray_backend_metal.mm)
+  target_compile_options(ndarray_backend_metal PRIVATE -fobjc-arc)
+
+  # kernels are compiled from source at runtime, so no offline metal compiler (full Xcode) is needed
+  target_compile_definitions(ndarray_backend_metal PRIVATE
+    "NDL_METAL_SHADER_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/src/ndarray_backend_metal.metal\"")
+
+  target_link_libraries(ndarray_backend_metal ${LINKER_LIBS})
+  pybind11_extension(ndarray_backend_metal)
+  pybind11_strip(ndarray_backend_metal)
+
+  # directly output to ffi folder
+  set_target_properties(ndarray_backend_metal
+    PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python/needle/backend_ndarray
+    CXX_VISIBILITY_PRESET "hidden"
+  )
+
+  set_property(TARGET ndarray_backend_metal PROPERTY LINK_OPTIONS -undefined dynamic_lookup)
+
+endif()
