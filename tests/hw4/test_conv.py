@@ -9,7 +9,9 @@ import itertools
 
 
 _DEVICES = [ndl.cpu(), pytest.param(ndl.cuda(),
-    marks=pytest.mark.skipif(not ndl.cuda().enabled(), reason="No GPU"))]
+    marks=pytest.mark.skipif(not ndl.cuda().enabled(), reason="No GPU")),
+    pytest.param(ndl.metal(),
+    marks=pytest.mark.skipif(not ndl.metal().enabled(), reason="No Metal"))]
 
 def backward_check(f, *args, **kwargs):
     eps = 1e-3

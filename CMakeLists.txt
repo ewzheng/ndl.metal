@@ -103,7 +103,8 @@ if(APPLE AND METAL_LIBRARY AND FOUNDATION_LIBRARY)
 
   # kernels are compiled from source at runtime, so no offline metal compiler (full Xcode) is needed
   target_compile_definitions(ndarray_backend_metal PRIVATE
-    "NDL_METAL_SHADER_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/src/ndarray_backend_metal.metal\"")
+    "NDL_METAL_SHADER_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/src/ndarray_backend_metal.metal\""
+    "NDL_METAL_COMMON_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/src/ndarray_backend_metal.h\"")
 
   target_link_libraries(ndarray_backend_metal ${LINKER_LIBS})
   pybind11_extension(ndarray_backend_metal)

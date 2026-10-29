@@ -13,7 +13,9 @@ np.random.seed(2)
 
 
 _DEVICES = [ndl.cpu(), pytest.param(ndl.cuda(),
-    marks=pytest.mark.skipif(not ndl.cuda().enabled(), reason="No GPU"))]
+    marks=pytest.mark.skipif(not ndl.cuda().enabled(), reason="No GPU")),
+    pytest.param(ndl.metal(),
+    marks=pytest.mark.skipif(not ndl.metal().enabled(), reason="No Metal"))]
 
 
 TRAIN = [True, False]
@@ -34,7 +36,7 @@ def test_cifar10_dataset(train):
 BATCH_SIZES = [1, 15]
 @pytest.mark.parametrize("batch_size", BATCH_SIZES)
 @pytest.mark.parametrize("train", TRAIN)
-@pytest.mark.parametrize("device", _DEVICES, ids=["cpu", "cuda"])
+@pytest.mark.parametrize("device", _DEVICES, ids=["cpu", "cuda", "metal"])
 def test_cifar10_loader(batch_size, train, device):
     cifar10_train_dataset = ndl.data.CIFAR10Dataset("data/cifar-10-batches-py", train=True)
     train_loader = ndl.data.DataLoader(cifar10_train_dataset, batch_size)
@@ -50,7 +52,7 @@ BPTT = [3, 32]
 @pytest.mark.parametrize("batch_size", BATCH_SIZES)
 @pytest.mark.parametrize("bptt", BPTT)
 @pytest.mark.parametrize("train", TRAIN)
-@pytest.mark.parametrize("device", _DEVICES, ids=["cpu", "cuda"])
+@pytest.mark.parametrize("device", _DEVICES, ids=["cpu", "cuda", "metal"])
 def test_ptb_dataset(batch_size, bptt, train, device):
     # TODO update with more tests?
     corpus = ndl.data.Corpus("data/ptb")

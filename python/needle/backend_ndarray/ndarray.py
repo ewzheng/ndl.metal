@@ -68,6 +68,14 @@ def cuda() -> BackendDevice:
     except ImportError:
         return BackendDevice("cuda", None)
 
+def metal() -> BackendDevice:
+    """Return metal device"""
+    try:
+        from . import ndarray_backend_metal
+
+        return BackendDevice("metal", ndarray_backend_metal)
+    except ImportError:
+        return BackendDevice("metal", None)
 
 def cpu_numpy() -> BackendDevice:
     """Return numpy device"""
@@ -85,7 +93,7 @@ def default_device() -> BackendDevice:
 
 def all_devices() -> list[BackendDevice]:
     """return a list of all available devices"""
-    return [cpu(), cuda(), cpu_numpy()]
+    return [cpu(), cuda(), metal(), cpu_numpy()]
 
 
 class NDArray:
